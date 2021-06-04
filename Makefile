@@ -21,9 +21,9 @@ CC = gcc
 EXEC ?= nesdump2ff
 MAN_FILE := nesdump2ff.1
 
-CCFLAGS := -Wall -Wextra -O2
+CCFLAGS := -Wall -Wextra -O2 -std='c99' -pedantic-errors
 
-LIBFLAGS := -lgffimage -lm
+LIBFLAGS := -limged -lm
 
 SRC_DIR := source
 

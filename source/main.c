@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <gffimage/ffimage.h>
+#include <imged/imged.h>
+#include <imged/imged_rw.h>
 #include "rom.h"
 	
 /*
@@ -25,7 +26,7 @@
 
 rom* mainRom = NULL;
 
-ffcolor colors[] = {
+ImgColor colors[] = {
 	{0, 0, 0, 0},
 	{0, 255, 0, 255},
 	{255, 0, 0, 255},
@@ -42,24 +43,27 @@ int main(int argc, char** argv){
 		fprintf(stderr, "nesdump2ff: %s: No such file or directory\n", argv[1]);
 		exit(1);
 	}
+
 	int offset_chrom = (16+mainRom->rom_buffer[4]*16*1024)/mainRom->bytes_per_sprite;
 	int num_of_sprites = mainRom->size/mainRom->bytes_per_sprite-offset_chrom;
 	int sprites_width = 16;
 	int sprites_height = num_of_sprites/16;
-	ffimage* image = ffimage_create(sprites_width*8, sprites_height*8);
+
+	ImgCanvas* image = img_createCanvas(sprites_width*8, sprites_height*8);
 	for(int i = 0; i < sprites_width; i++){
 		for(int j = 0; j < sprites_height; j++){
 			int offset = offset_chrom+i+j*sprites_width;
 			for(int k = 0; k < 8; k++){
 				for(int l = 0; l < 8; l++){
 					int current_color = rom_getPixel(mainRom, offset, 7-k, l);
-					ffimage_drawPixel(image, i*8+k, j*8+l, colors[current_color]);
+					img_putPixel(image, i*8+k, j*8+l, colors[current_color]);
 				}
 			}
 		}
 	}
-	ffimage_saveToOutput(image);
-	ffimage_destroy(image);
+
+	img_saveFF(image, NULL);
+	img_destroyCanvas(image);
 	rom_destroy(mainRom);
 	return 0;
 }

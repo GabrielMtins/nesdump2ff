@@ -13,7 +13,7 @@ $ sudo make install
 
 # Dependencies
 
-libgffimage: https://github.com/GabrielMtins/libgffimage
+imged: https://github.com/GabrielMtins/imged
 
 # Usage
 
